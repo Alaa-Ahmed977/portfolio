@@ -93,8 +93,9 @@
     padding-top:18px; padding-bottom:18px;
   }
   .logo{
-    font-family:var(--mono); font-weight:600; font-size:15px;
-    letter-spacing:0.02em;
+    font-family:var(--display); font-weight:700; font-size:20px;
+    letter-spacing:-0.01em;
+    display:flex; align-items:baseline; gap:6px;
   }
   .logo span{color:var(--amber);}
   .navlinks{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
@@ -362,6 +363,20 @@
     font-size:11px; color:var(--ink-soft); flex-wrap:wrap; gap:8px;
   }
 
+  /* ---------- CURSOR STAR TRAIL ---------- */
+  .cursor-star{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
+    color:var(--amber);
+    line-height:1;
+    will-change:transform, opacity;
+    animation:starPop .9s var(--ease) forwards;
+  }
+  @keyframes starPop{
+    0%{opacity:1; transform:translate(-50%,-50%) scale(0.3) rotate(0deg);}
+    30%{opacity:1; transform:translate(-50%,-50%) scale(1) rotate(15deg);}
+    100%{opacity:0; transform:translate(-50%,-50%) scale(0.9) rotate(60deg) translateY(-22px);}
+  }
+
   /* ---------- RESPONSIVE ---------- */
   @media (max-width:900px){
     .hero-grid{grid-template-columns:1fr;}
@@ -388,13 +403,14 @@
 
 <header>
   <nav class="wrap">
-    <div class="logo">ALAA<span>.</span>AHMED</div>
+    <div class="logo">Alaa <span>Ahmed</span></div>
     <ul class="navlinks">
       <li><a href="#about">About</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#work">Work</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="https://github.com/alaa-ahmed977" target="_blank" rel="noopener">GitHub ↗</a></li>
     </ul>
   </nav>
   <div class="progress" id="progress"></div>
@@ -443,8 +459,8 @@
       <div>
         <div class="eyebrow">About</div>
         <h2>Understanding the problem comes before writing the code.</h2>
-        <p>I'm a Computer Science student with a growing focus on software development and practical digital solutions. My foundation spans programming, Object-Oriented Programming, data structures, databases, and software engineering — built through coursework, technical training, and independent projects.</p>
-        <p>Right now I'm developing my skills in full-stack .NET development, working toward applications that are functional, scalable, and genuinely usable — not just feature-complete.</p>
+        <p>I'm a Computer Science student at Assiut University, currently deepening my skills through the Full-Stack .NET track at the Digital Egypt Pioneers Initiative (DEPI) — designing database schemas, building REST APIs with ASP.NET Core and Entity Framework, and shipping the interface in React.</p>
+        <p>My approach is methodical: understand the problem before writing a line of code, break it down, then build something clean and maintainable. I'm looking for an internship or junior role where I can keep sharpening that judgment alongside a strong team.</p>
         <div class="usp">"I don't just build features — I look for the problem behind them, and turn it into a solution that creates real value for the people using it."</div>
       </div>
       <div class="fact-table">
@@ -635,10 +651,12 @@
         <div class="cta-row">
           <a class="btn btn-solid" href="mailto:alaaahmed29102005@gmail.com">Email me</a>
           <a class="btn btn-outline" href="https://www.linkedin.com/in/alaa-ahmed-748aa" target="_blank" rel="noopener">Connect on LinkedIn</a>
+          <a class="btn btn-outline" href="https://github.com/alaa-ahmed977" target="_blank" rel="noopener">View GitHub</a>
         </div>
         <div class="contact-links">
           <a href="mailto:alaaahmed29102005@gmail.com">alaaahmed29102005@gmail.com</a>
           <a href="https://www.linkedin.com/in/alaa-ahmed-748aa" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://github.com/alaa-ahmed977" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
       </div>
     </div>
@@ -698,9 +716,10 @@
 
   // active nav link on scroll
   var navLinks = document.querySelectorAll('.navlinks a');
-  var sections = Array.prototype.slice.call(navLinks).map(function(a){
-    return document.querySelector(a.getAttribute('href'));
-  }).filter(Boolean);
+  var sections = Array.prototype.slice.call(navLinks)
+    .filter(function(a){ return a.getAttribute('href').charAt(0) === '#'; })
+    .map(function(a){ return document.querySelector(a.getAttribute('href')); })
+    .filter(Boolean);
   function setActiveNav(){
     var pos = window.scrollY + 120;
     var current = sections[0];
@@ -711,6 +730,30 @@
   }
   document.addEventListener('scroll', setActiveNav, {passive:true});
   setActiveNav();
+
+  // cursor star trail
+  (function(){
+    if(reduceMotion) return;
+    if(window.matchMedia('(pointer: coarse)').matches) return;
+    var glyphs = ['✦','✧','★'];
+    var lastTime = 0;
+    var minInterval = 55;
+    document.addEventListener('mousemove', function(e){
+      var now = Date.now();
+      if(now - lastTime < minInterval) return;
+      lastTime = now;
+      var star = document.createElement('span');
+      star.className = 'cursor-star';
+      star.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      var offsetX = (Math.random() - 0.5) * 12;
+      var offsetY = (Math.random() - 0.5) * 12;
+      star.style.left = (e.clientX + offsetX) + 'px';
+      star.style.top = (e.clientY + offsetY) + 'px';
+      star.style.fontSize = (14 + Math.random() * 10) + 'px';
+      document.body.appendChild(star);
+      star.addEventListener('animationend', function(){ star.remove(); });
+    }, {passive:true});
+  })();
 </script>
 </body>
 </html>
