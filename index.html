@@ -19,6 +19,9 @@
     --amber-soft:#142544;
     --teal:#5b8ff5;
     --teal-soft:#101d38;
+    --header-bg:rgba(5,8,15,0.82);
+    --grad-1:rgba(91,143,245,0.16);
+    --grad-2:rgba(59,130,246,0.12);
     --radius:2px;
     --display:'Space Grotesk', sans-serif;
     --body:'IBM Plex Sans', sans-serif;
@@ -28,13 +31,30 @@
     --ease:cubic-bezier(.22,.68,0,1);
   }
 
+  [data-theme="light"]{
+    --bg:#f6f7fb;
+    --panel:#ffffff;
+    --ink:#12182b;
+    --ink-soft:#54607c;
+    --line:#d7deeb;
+    --line-soft:#e8ecf5;
+    --amber:#2563eb;
+    --amber-soft:#e3ecff;
+    --teal:#3b6fe0;
+    --teal-soft:#eef2ff;
+    --header-bg:rgba(246,247,251,0.85);
+    --grad-1:rgba(37,99,235,0.08);
+    --grad-2:rgba(37,99,235,0.06);
+    --shadow:0 1px 2px rgba(15,23,42,0.08), 0 12px 30px -14px rgba(37,99,235,0.18);
+  }
+
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
     margin:0;
     background:
-      radial-gradient(680px 420px at 82% -6%, rgba(91,143,245,0.16), transparent 60%),
-      radial-gradient(520px 360px at -4% 18%, rgba(59,130,246,0.12), transparent 55%),
+      radial-gradient(680px 420px at 82% -6%, var(--grad-1), transparent 60%),
+      radial-gradient(520px 360px at -4% 18%, var(--grad-2), transparent 55%),
       linear-gradient(var(--line-soft) 1px, transparent 1px) 0 0/40px 40px,
       linear-gradient(90deg, var(--line-soft) 1px, transparent 1px) 0 0/40px 40px,
       var(--bg);
@@ -42,6 +62,7 @@
     font-family:var(--body);
     line-height:1.55;
     -webkit-font-smoothing:antialiased;
+    transition:background-color .25s var(--ease), color .25s var(--ease);
   }
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
@@ -79,10 +100,17 @@
   /* ---------- NAV ---------- */
   header{
     position:sticky; top:0; z-index:50;
-    background:rgba(5,8,15,0.82);
+    background:var(--header-bg);
     backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);
   }
+  .theme-toggle{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border:1px solid var(--line); border-radius:50%;
+    background:transparent; color:var(--ink); cursor:pointer; font-size:15px;
+    transition:border-color .15s, transform .15s, background .15s;
+  }
+  .theme-toggle:hover{border-color:var(--amber); transform:translateY(-1px);}
   .progress{
     position:absolute; left:0; bottom:-1px; height:2px; width:0%;
     background:linear-gradient(90deg, var(--teal), var(--amber));
@@ -99,6 +127,7 @@
   }
   .logo span{color:var(--amber);}
   .navlinks{display:flex; gap:28px; list-style:none; margin:0; padding:0;}
+  .nav-right{display:flex; align-items:center; gap:24px;}
   .navlinks a{
     position:relative;
     font-family:var(--mono); font-size:12.5px; text-decoration:none;
@@ -404,14 +433,17 @@
 <header>
   <nav class="wrap">
     <div class="logo">Alaa <span>Ahmed</span></div>
-    <ul class="navlinks">
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#process">Process</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="https://github.com/alaa-ahmed977" target="_blank" rel="noopener">GitHub ↗</a></li>
-    </ul>
+    <div class="nav-right">
+      <ul class="navlinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="https://github.com/alaa-ahmed977" target="_blank" rel="noopener">GitHub ↗</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light and dark mode">🌙</button>
+    </div>
   </nav>
   <div class="progress" id="progress"></div>
 </header>
@@ -424,7 +456,7 @@
       <div>
         <div class="eyebrow">Junior Full-Stack Developer</div>
         <h1>I build software around the <em>problem</em>, not the tech stack.</h1>
-        <p class="lede">Computer Science student and Full-Stack .NET trainee, focused on turning real requirements into working, well-structured applications — from the database schema up.</p>
+        <p class="lede">Full-Stack .NET trainee, focused on turning real requirements into working, well-structured applications — from the database schema up.</p>
         <div class="hero-meta">
           <span><b>Base:</b> Assiut, Egypt</span>
           <span><b>Focus:</b> ASP.NET Core · React · SQL Server</span>
@@ -459,16 +491,15 @@
       <div>
         <div class="eyebrow">About</div>
         <h2>Understanding the problem comes before writing the code.</h2>
-        <p>I'm a Computer Science student at Assiut University, currently deepening my skills through the Full-Stack .NET track at the Digital Egypt Pioneers Initiative (DEPI) — designing database schemas, building REST APIs with ASP.NET Core and Entity Framework, and shipping the interface in React.</p>
-        <p>My approach is methodical: understand the problem before writing a line of code, break it down, then build something clean and maintainable. I'm looking for an internship or junior role where I can keep sharpening that judgment alongside a strong team.</p>
+        <p>It started with curiosity, not a career plan — wanting to know why things worked the way they did. That curiosity turned into late nights with C++ and Java, then into databases and system design, then into full applications. Somewhere between my first out-of-bounds error and my first ER diagram, I realized I wasn't just picking up syntax — I was learning how to think through problems properly.</p>
+        <p>That curiosity now has a direction: full-stack .NET development, built through the DEPI Full-Stack .NET track — ASP.NET Core, React, SQL Server, and everything in between. But what actually drives the work isn't the stack, it's the question behind every project: what problem am I really solving, and who is it for.</p>
         <div class="usp">"I don't just build features — I look for the problem behind them, and turn it into a solution that creates real value for the people using it."</div>
       </div>
       <div class="fact-table">
         <div class="fact-row"><span class="k">role</span><span class="v">Junior Full-Stack Dev</span></div>
-        <div class="fact-row"><span class="k">education</span><span class="v">B.Sc. Computer Science</span></div>
-        <div class="fact-row"><span class="k">university</span><span class="v">Assiut University</span></div>
         <div class="fact-row"><span class="k">training</span><span class="v">DEPI · Full-Stack .NET</span></div>
         <div class="fact-row"><span class="k">stack</span><span class="v">.NET / React / SQL</span></div>
+        <div class="fact-row"><span class="k">approach</span><span class="v">Problem-first</span></div>
         <div class="fact-row"><span class="k">status</span><span class="v">Open to opportunities</span></div>
       </div>
     </div>
@@ -730,6 +761,33 @@
   }
   document.addEventListener('scroll', setActiveNav, {passive:true});
   setActiveNav();
+
+  // theme toggle
+  (function(){
+    var root = document.documentElement;
+    var toggle = document.getElementById('themeToggle');
+    var stored = null;
+    try{ stored = localStorage.getItem('theme'); }catch(e){}
+    var systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    var current = stored || (systemLight ? 'light' : 'dark');
+    applyTheme(current);
+
+    toggle.addEventListener('click', function(){
+      current = current === 'dark' ? 'light' : 'dark';
+      applyTheme(current);
+      try{ localStorage.setItem('theme', current); }catch(e){}
+    });
+
+    function applyTheme(theme){
+      if(theme === 'light'){
+        root.setAttribute('data-theme', 'light');
+        toggle.textContent = '☀️';
+      } else {
+        root.removeAttribute('data-theme');
+        toggle.textContent = '🌙';
+      }
+    }
+  })();
 
   // cursor star trail
   (function(){
